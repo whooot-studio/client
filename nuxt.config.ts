@@ -10,6 +10,7 @@ export default defineNuxtConfig({
       api: {
         host: "",
         port: "",
+        secure: "",
       },
     },
   },
