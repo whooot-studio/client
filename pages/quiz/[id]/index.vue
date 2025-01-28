@@ -1,0 +1,1 @@
+<template>quiz/id</template>
