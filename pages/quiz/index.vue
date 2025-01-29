@@ -1,7 +1,10 @@
 <script setup lang="ts">
-const list = `${ENDPOINTS.quiz}/list`;
+import useApi from "~/composables/api";
 
-const { data, error } = useFetch<
+const { endpoints } = useApi();
+const list = `${endpoints.quiz}/list`;
+
+const { data, error, status } = useFetch<
   {
     id: number;
     type: string;
@@ -13,9 +16,7 @@ const { data, error } = useFetch<
       answer: string;
     }[];
   }[]
->(list, {
-  method: "GET",
-});
+>(list);
 </script>
 
 <template>
@@ -26,20 +27,11 @@ const { data, error } = useFetch<
         <p>{{ error }}</p>
       </UCard>
     </div>
-    <div v-else>
+    <div v-else-if="status === 'success'">
       <div v-for="quiz in data" :key="quiz.id">
         <UCard>
           <h2>{{ quiz.name }}</h2>
           <p>{{ quiz.author }}</p>
-          <div v-for="(question, index) in quiz.questions" :key="index">
-            <p>{{ question.question }}</p>
-            <ul>
-              <li v-for="(option, index) in question.options" :key="index">
-                {{ option }}
-              </li>
-            </ul>
-            <p>{{ question.answer }}</p>
-          </div>
 
           <UButton :to="`/quiz/${quiz.id}/admin`">Launch quiz!</UButton>
         </UCard>
