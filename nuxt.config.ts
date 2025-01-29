@@ -4,6 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@vueuse/nuxt", "@nuxt/ui"],
 
+  ssr: false,
+
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     public: {
