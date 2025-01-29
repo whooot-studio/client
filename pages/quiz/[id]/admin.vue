@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { useQRCode } from "@vueuse/integrations/useQRCode";
+import useApi from "~/composables/api";
+
+type User = {
+  id: string;
+  name: string;
+};
 
 const route = useRoute();
 const code = ref<string>("");
-const members = ref<any[]>([]);
-
+const members = ref<Map<string, User>>(new Map());
 // TODO: Use the actual client URL
 const qr = useQRCode(() => `http://localhost:3000/rooms/${code.value}`, {
   errorCorrectionLevel: "H",
   mode: "alphanumeric",
 });
 
-const { send } = useWebSocket(ENDPOINTS.rooms, {
+const { endpoints } = useApi();
+const { send } = useWebSocket(endpoints.rooms, {
   onConnected: async (_socket) => {
     const payload = {
       action: "meta:setup",
@@ -36,19 +42,38 @@ const { send } = useWebSocket(ENDPOINTS.rooms, {
         break;
 
       case "members:join":
-        members.value.push(payload.member);
+        members.value.set(payload.member.id, payload.member);
         break;
 
       case "members:leave":
-        members.value = members.value.filter((m) => m === payload.member);
+        members.value.delete(payload.member.id);
         break;
 
       case "members:all":
-        members.value = payload.members;
+        for (const [id, member] of Object.entries(payload.members)) {
+          members.value.set(id, member as User);
+        }
         break;
     }
   },
+
+  onError: (ws, error) => {
+    console.error(error);
+  },
+
+  onDisconnected: () => {
+    console.log("Disconnected");
+  },
 });
+
+const start = () => {
+  const payload = {
+    action: "game:start",
+    code: code.value,
+  };
+
+  send(JSON.stringify(payload));
+};
 </script>
 
 <template>
@@ -56,4 +81,10 @@ const { send } = useWebSocket(ENDPOINTS.rooms, {
     <p>Code: {{ code }}</p>
     <img class="w-72" :src="qr" />
   </template>
+
+  <p v-if="members" v-for="[id, member] in members" :key="id">
+    {{ member.name }}
+  </p>
+
+  <button @click="start">Start</button>
 </template>
