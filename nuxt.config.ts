@@ -14,6 +14,10 @@ export default defineNuxtConfig({
         port: "",
         secure: "",
       },
+
+      client: {
+        url: "",
+      }
     },
   },
 });

@@ -11,6 +11,7 @@ export default function useApi() {
   }
 
   const endpoints = {
+    auth: createHttpEndpoint("/auth"),
     quiz: createHttpEndpoint("/quiz"),
     rooms: createWsEndpoint("/rooms"),
   };
