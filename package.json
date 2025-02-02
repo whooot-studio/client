@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/icon": "^1.10.3",
     "@nuxt/ui": "^2.21.0",
     "@vueuse/integrations": "^12.5.0",
     "@vueuse/nuxt": "^12.5.0",
