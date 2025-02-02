@@ -2,6 +2,13 @@
 import { useQRCode } from "@vueuse/integrations/useQRCode";
 import useApi from "~/composables/api";
 
+definePageMeta({
+  auth: {
+    guest: "deny",
+    user: "allow",
+  },
+});
+
 type User = {
   id: string;
   name: string;

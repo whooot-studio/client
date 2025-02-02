@@ -1,4 +1,11 @@
 <script setup lang="ts">
+definePageMeta({
+  auth: {
+    guest: "deny",
+    user: "allow",
+  },
+});
+
 import useApi from "~/composables/api";
 
 const { endpoints } = useApi();
@@ -16,7 +23,9 @@ const { data, error, status } = useFetch<
       answer: string;
     }[];
   }[]
->(list);
+>(list, {
+  credentials: "include",
+});
 </script>
 
 <template>
