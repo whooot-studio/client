@@ -1,6 +1,7 @@
 {
-  "name": "nuxt-app",
-  "private": true,
+  "name": "@whooot/client",
+  "version": "0.1.0",
+  "description": "Whooot! - Free, Open-Source, Party Quiz",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
@@ -23,5 +24,24 @@
   "devDependencies": {
     "@iconify-json/logos": "^1.2.4",
     "@iconify-json/tabler": "^1.2.15"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/whooot-studio/client.git"
+  },
+  "keywords": [
+    "kahoot",
+    "quiz",
+    "foss",
+    "free",
+    "open-source",
+    "game",
+    "multiplayer"
+  ],
+  "author": "Josselin Dulongcourty <contact@josselinonduty.fr>",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/whooot-studio/client/issues"
+  },
+  "homepage": "https://github.com/whooot-studio/client#readme"
 }
