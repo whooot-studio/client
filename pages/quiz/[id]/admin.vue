@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useQRCode } from "@vueuse/integrations/useQRCode";
 import useApi from "~/composables/api";
+import useClient from "~/composables/client";
 
 definePageMeta({
   auth: {
@@ -8,6 +9,8 @@ definePageMeta({
     user: "allow",
   },
 });
+
+const client = useClient();
 
 type User = {
   id: string;
@@ -18,7 +21,7 @@ const route = useRoute();
 const code = ref<string>("");
 const members = ref<Map<string, User>>(new Map());
 // TODO: Use the actual client URL
-const qr = useQRCode(() => `http://localhost:3000/rooms/${code.value}`, {
+const qr = useQRCode(() => `${client.origin}/rooms/${code.value}`, {
   errorCorrectionLevel: "H",
   mode: "alphanumeric",
 });
