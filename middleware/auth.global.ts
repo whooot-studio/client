@@ -1,6 +1,8 @@
 import useAuth from "~/composables/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  if (import.meta.server) return; // Run only on client-side
+
   const auth = useAuth();
 
   const meta = to.meta.auth;

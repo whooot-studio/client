@@ -9,7 +9,6 @@ definePageMeta({
 });
 
 const authClient = useAuth();
-const router = useRouter();
 
 async function disconnect() {
   await authClient.signOut({
@@ -18,7 +17,9 @@ async function disconnect() {
         alert(ctx.error.message);
       },
       onSuccess: (ctx) => {
-        router.push("/");
+        navigateTo("/", {
+          external: true,
+        });
       },
     },
   });
@@ -28,5 +29,5 @@ await disconnect();
 </script>
 
 <template>
-  <p>Logging out...</p>
+  <p>You are being redirected. Please wait...</p>
 </template>
