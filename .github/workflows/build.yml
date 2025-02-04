@@ -27,9 +27,6 @@ jobs:
       - name: Build Docker image
         run: docker build -t whooot-studio/client:latest -t whooot-studio/client:${{ env.IMAGE_TAG }} .
 
-      - name: Build Docker image
-        run: docker build -t whooot-studio/client:${{ env.IMAGE_TAG }} -t whooot-studio/client:latest .
-
       - name: Save Docker image to artifact
         run: docker save whooot-studio/client:${{ env.IMAGE_TAG }} whooot-studio/client:latest -o client.tar
 
