@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
-import authClient from "~/lib/auth";
+import useAuth from "~/composables/auth";
 import { usernameValidator } from "~/schema/auth.schema";
 
 definePageMeta({
@@ -11,6 +11,7 @@ definePageMeta({
   },
 });
 
+const authClient = useAuth();
 const { useSession } = authClient;
 const session = useSession();
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import authClient from "~/lib/auth";
+import useAuth from "~/composables/auth";
 
-const { useSession } = authClient;
+const { useSession } = useAuth();
 const session = useSession();
 
 const links = computed(() => {

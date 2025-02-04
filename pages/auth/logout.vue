@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import authClient from "~/lib/auth";
+import useAuth from "~/composables/auth";
 
 definePageMeta({
   auth: {
@@ -8,6 +8,7 @@ definePageMeta({
   },
 });
 
+const authClient = useAuth();
 const router = useRouter();
 
 async function disconnect() {

@@ -1,8 +1,7 @@
-import type _auth from "~/lib/auth";
+import useAuth from "~/composables/auth";
 
-let auth: _auth | undefined = undefined;
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (!auth) auth = (await import("~/lib/auth")).default; // Lazy load
+  const auth = useAuth();
 
   const meta = to.meta.auth;
   if (!meta) return;

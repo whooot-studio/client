@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 import SocialLogin from "~/components/parts/SocialLogin.vue";
-import authClient from "~/lib/auth";
+import useAuth from "~/composables/auth";
 import { LoginSchema } from "~/schema/auth.schema";
 
 definePageMeta({
@@ -11,6 +11,7 @@ definePageMeta({
   },
 });
 
+const authClient = useAuth();
 const router = useRouter();
 
 const error = ref<any>(null);

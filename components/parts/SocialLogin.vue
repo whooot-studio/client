@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import useClient from "~/composables/client";
-import authClient from "~/lib/auth";
+import useAuth from "~/composables/auth";
+
+const authClient = useAuth();
 const client = useClient();
 
 type Provider = Parameters<typeof authClient.signIn.social>[0]["provider"];
