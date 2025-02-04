@@ -1,6 +1,6 @@
 export default function useApi() {
   const api = useRuntimeConfig().public.api;
-  const baseUrl = `${api.host}:${api.port}/api`;
+  const baseUrl = `${api.host}${api.port ? ":" + api.port : ""}/api`;
 
   function createHttpEndpoint(path: string) {
     return `${api.secure ? "https" : "http"}://${baseUrl}${path}`;
