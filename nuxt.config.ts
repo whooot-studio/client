@@ -20,8 +20,16 @@ export default defineNuxtConfig({
   },
 
   icon: {
-    serverBundle: {
-      collections: ["tabler", "logos"],
+    clientBundle: {
+      icons: [
+        "tabler:home",
+        "tabler:list",
+        "tabler:user-plus",
+        "tabler:user",
+        "tabler:logout",
+        "tabler:rosette-discount-check",
+        "tabler:rosette-discount-check-off",
+      ],
     },
   },
 });
