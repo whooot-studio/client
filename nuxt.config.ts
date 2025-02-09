@@ -18,18 +18,4 @@ export default defineNuxtConfig({
       },
     },
   },
-
-  icon: {
-    clientBundle: {
-      icons: [
-        "tabler:home",
-        "tabler:list",
-        "tabler:user-plus",
-        "tabler:user",
-        "tabler:logout",
-        "tabler:rosette-discount-check",
-        "tabler:rosette-discount-check-off",
-      ],
-    },
-  },
 });

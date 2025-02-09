@@ -3,9 +3,7 @@ import Navigation from "~/components/parts/Navigation.vue";
 </script>
 
 <template>
-  <ClientOnly>
-    <Navigation class="mb-4" />
+  <Navigation class="mb-4" />
 
-    <slot />
-  </ClientOnly>
+  <slot />
 </template>

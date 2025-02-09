@@ -10,9 +10,7 @@ declare module "vue-router" {
     auth?: AuthGuardMeta;
   }
 }
-
-import type { PageMeta } from "../node_modules/nuxt/dist/pages/runtime/composables";
-declare module "../node_modules/nuxt/dist/pages/runtime/composables" {
+declare module "#app" {
   interface PageMeta {
     auth?: AuthGuardMeta;
   }
