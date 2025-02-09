@@ -20,7 +20,6 @@ type User = {
 const route = useRoute();
 const code = ref<string>("");
 const members = ref<Map<string, User>>(new Map());
-// TODO: Use the actual client URL
 const qr = useQRCode(() => `${client.origin}/rooms/${code.value}`, {
   errorCorrectionLevel: "H",
   mode: "alphanumeric",

@@ -11,9 +11,7 @@ definePageMeta({
   },
 });
 
-const authClient = useAuth();
-const { useSession } = authClient;
-const session = useSession();
+const { user, client: authClient } = useAuth();
 
 const error = ref<string | null>(null);
 
@@ -24,8 +22,8 @@ const input = reactive({
   email: "",
 });
 watchEffect(() => {
-  input.username = session.value.data?.user.name ?? "";
-  input.email = session.value.data?.user.email ?? "";
+  input.username = user.value?.name ?? "";
+  input.email = user.value?.email ?? "";
 });
 
 async function updateUsername(event: FormSubmitEvent<UsernameSchema>) {
@@ -84,11 +82,11 @@ async function deleteUser() {
             <UInput
               v-model="input.email"
               :icon="
-                session.data?.user.emailVerified
+                user?.emailVerified
                   ? 'tabler:rosette-discount-check'
                   : 'tabler:rosette-discount-check-off'
               "
-              :color="session.data?.user.emailVerified ? 'green' : 'red'"
+              :color="user?.emailVerified ? 'green' : 'red'"
               disabled
             />
 
@@ -110,7 +108,7 @@ async function deleteUser() {
 
             <p class="text-sm text-gray-500">
               Joined:
-              {{ new Date(session.data?.user.createdAt!).toLocaleDateString() }}
+              {{ new Date(user?.createdAt!).toLocaleDateString() }}
             </p>
           </template>
 

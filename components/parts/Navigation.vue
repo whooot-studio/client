@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import useAuth from "~/composables/auth";
 
-const { useSession } = useAuth();
-const session = useSession();
+const { user, loggedIn } = useAuth();
 
 const links = computed(() => {
   const _links = [
@@ -16,29 +15,29 @@ const links = computed(() => {
         label: "Quiz",
         icon: "tabler:list",
         to: "/quiz",
-        disabled: !session.value.data?.user,
+        disabled: !loggedIn.value,
       },
     ],
     [
-      !session.value.data?.user && {
+      !loggedIn.value && {
         label: "Register",
         icon: "tabler:user-plus",
         to: "/auth/register",
       },
-      !session.value.data?.user && {
+      !loggedIn.value && {
         label: "Login",
         icon: "tabler:user",
         to: "/auth/login",
       },
-      session.value.data?.user && {
+      loggedIn.value && {
         label: "Profile",
         to: "/settings/profile",
         avatar: {
-          src: session.value.data.user.image as string,
-          alt: session.value.data.user.name,
+          src: user.value?.image as string,
+          alt: user.value?.name,
         },
       },
-      session.value.data?.user && {
+      loggedIn.value && {
         label: "Logout",
         icon: "tabler:logout",
         to: "/auth/logout",

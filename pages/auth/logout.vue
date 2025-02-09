@@ -8,18 +8,17 @@ definePageMeta({
   },
 });
 
-const authClient = useAuth();
+const { client: authClient } = useAuth();
 
 async function disconnect() {
   await authClient.signOut({
     fetchOptions: {
       onError: (ctx) => {
-        alert(ctx.error.message);
+        console.error(ctx.error);
+        alert(ctx.error.message || ctx.error);
       },
       onSuccess: (ctx) => {
-        navigateTo("/", {
-          external: true,
-        });
+        navigateTo("/");
       },
     },
   });

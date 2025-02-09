@@ -2,7 +2,7 @@
 import useClient from "~/composables/client";
 import useAuth from "~/composables/auth";
 
-const authClient = useAuth();
+const { client: authClient } = useAuth();
 const client = useClient();
 
 type Provider = Parameters<typeof authClient.signIn.social>[0]["provider"];
@@ -24,7 +24,8 @@ async function connectProviderCustom(provider: string) {
     callbackURL: `${client.origin}/settings/profile`,
     fetchOptions: {
       onError: (ctx) => {
-        alert(ctx.error.message);
+        console.error(ctx.error);
+        alert(ctx.error.message || ctx.error);
       },
     },
   });

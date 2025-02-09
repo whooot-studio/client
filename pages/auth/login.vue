@@ -11,7 +11,7 @@ definePageMeta({
   },
 });
 
-const authClient = useAuth();
+const { client: authClient } = useAuth();
 const router = useRouter();
 
 const error = ref<any>(null);
