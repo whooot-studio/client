@@ -1,10 +1,13 @@
+import { defu } from "defu";
 import useAuth from "~/composables/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const { fetchSession, loggedIn } = useAuth();
 
-  const meta = to.meta.auth;
-  if (!meta) return;
+  const meta = defu(to.meta.auth, {
+    guest: "allow",
+    user: "allow",
+  });
 
   if (import.meta.client) {
     await fetchSession();
