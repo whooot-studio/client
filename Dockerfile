@@ -8,6 +8,7 @@ COPY package-lock.json .
 RUN npm ci
 
 COPY . .
+RUN npm run postinstall
 RUN npm run build
 
 # Production stage
