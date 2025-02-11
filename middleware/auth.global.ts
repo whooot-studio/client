@@ -9,10 +9,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     user: "allow",
   });
 
-  if (import.meta.client) {
-    await fetchSession();
-  }
-
+  await fetchSession();
   if (meta.guest === "deny" && !loggedIn.value) return abortNavigation();
   if (meta.user === "deny" && loggedIn.value) return abortNavigation();
 });
