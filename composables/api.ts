@@ -1,7 +1,9 @@
 export default function useApi() {
   const api = useRuntimeConfig().public.api;
   const host = import.meta.server ? api.ssrHost : api.host;
-  const baseUrl = `${host}${api.port ? ":" + api.port : ""}/api`;
+  const port = import.meta.server ? api.ssrPort : api.port;
+  const secure = import.meta.server ? api.ssrSecure : api.secure;
+  const baseUrl = `${host}${port ? ":" + port : ""}/api`;
 
   function createHttpEndpoint(path: string) {
     return `${api.secure ? "https" : "http"}://${baseUrl}${path}`;

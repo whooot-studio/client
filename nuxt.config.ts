@@ -12,6 +12,8 @@ export default defineNuxtConfig({
         port: "",
         secure: "",
         ssrHost: "",
+        ssrPort: "",
+        ssrSecure: "",
       },
 
       client: {
