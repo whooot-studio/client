@@ -21,4 +21,10 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  icon: {
+    serverBundle: {
+      collections: ["tabler", "logos"],
+    },
+  },
 });
