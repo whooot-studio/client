@@ -36,13 +36,7 @@ const { data, error, status } = await useFetch<Quiz[]>(list, {
     <div class="flex justify-between items-center gap-4 mb-4">
       <h1 class="text-3xl font-bold">My quizzes</h1>
 
-      <UButton
-        to="/quiz/new"
-        type="button"
-        size="lg"
-        icon="tabler:plus"
-        class=""
-      >
+      <UButton to="/quiz/new" type="button" size="lg" icon="tabler:plus">
         Create a quiz
       </UButton>
     </div>
@@ -63,15 +57,19 @@ const { data, error, status } = await useFetch<Quiz[]>(list, {
 
         <div class="flex gap-2 mt-4">
           <UButton
+            size="lg"
             variant="solid"
             color="primary"
             :to="`/quiz/${quiz.id}/admin`"
+            icon="tabler:target"
             >Play</UButton
           >
           <UButton
+            size="lg"
             variant="outline"
             color="primary"
             :to="`/quiz/${quiz.id}/edit`"
+            icon="tabler:edit"
             >Edit</UButton
           >
         </div>
