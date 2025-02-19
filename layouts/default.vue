@@ -3,9 +3,9 @@ import Navigation from "~/components/parts/Navigation.vue";
 </script>
 
 <template>
-  <div class="mb-4">
-    <Navigation />
+  <Navigation />
 
+  <div class="mt-4 mb-8">
     <slot />
   </div>
 </template>
