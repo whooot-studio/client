@@ -3,7 +3,7 @@ import useApi from "~/composables/api";
 import useAuth from "~/composables/auth";
 import type { FormSubmitEvent } from "#ui/types";
 
-import { QuizUpdateSchema } from "~/schema/quiz.schema";
+import { QuizSchema } from "~/schema/quiz.schema";
 import QuestionCard from "~/components/quiz/QuestionCard.vue";
 
 definePageMeta({
@@ -64,9 +64,9 @@ const error = ref<any>(null);
 const loading = ref(false);
 
 const state = reactive({
-  title: undefined as any,
-  description: undefined as any,
-  image: undefined as any,
+  title: "" as any,
+  description: "" as any,
+  image: "" as any,
   questions: [] as any[],
   users: [] as any[],
 });
@@ -86,7 +86,7 @@ state.image = init.value?.image;
 state.questions = init.value?.questions || [];
 state.users = init.value?.users || [];
 
-async function updateQuiz(input: QuizUpdateSchema) {
+async function updateQuiz(input: QuizSchema) {
   try {
     loading.value = true;
     error.value = null;
@@ -122,7 +122,7 @@ async function updateQuiz(input: QuizUpdateSchema) {
   }
 }
 
-async function submitQuiz(event: FormSubmitEvent<QuizUpdateSchema>) {
+async function submitQuiz(event: FormSubmitEvent<QuizSchema>) {
   await updateQuiz(event.data);
 }
 
@@ -152,7 +152,7 @@ function removeQuestion(index: number) {
     />
 
     <UForm
-      :schema="QuizUpdateSchema"
+      :schema="QuizSchema"
       :state="state"
       class="space-y-4"
       @submit="submitQuiz"

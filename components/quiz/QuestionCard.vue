@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 import useApi from "~/composables/api";
-import { QuestionCreateSchema } from "~/schema/question.schema";
+import { QuestionSchema } from "~/schema/question.schema";
 
 const props = defineProps<
   Partial<{
@@ -83,7 +83,7 @@ const { endpoints } = useApi();
 const updateEndpoint = `${endpoints.question}/update`;
 const deleteEndpoint = `${endpoints.question}/delete`;
 
-async function submitQuestion(event: FormSubmitEvent<QuestionCreateSchema>) {
+async function submitQuestion(event: FormSubmitEvent<QuestionSchema>) {
   const data = event.data;
 
   try {
@@ -148,7 +148,7 @@ async function deleteQuestion() {
 <template>
   <UCard>
     <UForm
-      :schema="QuestionCreateSchema"
+      :schema="QuestionSchema"
       :state="state"
       class="space-y-4"
       @submit="submitQuestion"
@@ -210,7 +210,7 @@ async function deleteQuestion() {
       </UFormGroup>
 
       <UFormGroup label="Points" name="points">
-        <UInput v-model="state.points" type="number" />
+        <UInput v-model.number="state.points" type="number" />
       </UFormGroup>
 
       <div class="space-y-1">

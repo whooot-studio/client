@@ -3,7 +3,7 @@ import type { FormSubmitEvent } from "#ui/types";
 import useApi from "~/composables/api";
 import useAuth from "~/composables/auth";
 
-import { QuizCreateSchema } from "~/schema/quiz.schema";
+import { QuizSchema } from "~/schema/quiz.schema";
 
 definePageMeta({
   auth: {
@@ -33,7 +33,7 @@ const { client: authClient } = useAuth();
 const router = useRouter();
 
 const error = ref<any>(null);
-async function create(input: QuizCreateSchema) {
+async function create(input: QuizSchema) {
   try {
     const data = await $fetch<Quiz>(createEndpoint, {
       method: "POST",
@@ -52,12 +52,12 @@ async function create(input: QuizCreateSchema) {
 }
 
 const state = reactive({
-  title: undefined,
-  description: undefined,
-  image: undefined,
+  title: "",
+  description: "",
+  image: "",
 });
 
-async function onSubmit(event: FormSubmitEvent<QuizCreateSchema>) {
+async function onSubmit(event: FormSubmitEvent<QuizSchema>) {
   await create(event.data);
 }
 </script>
@@ -75,7 +75,7 @@ async function onSubmit(event: FormSubmitEvent<QuizCreateSchema>) {
     />
 
     <UForm
-      :schema="QuizCreateSchema"
+      :schema="QuizSchema"
       :state="state"
       class="space-y-4"
       @submit="onSubmit"
