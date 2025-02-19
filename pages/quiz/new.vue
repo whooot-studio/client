@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { defu } from "defu";
+import type { FormSubmitEvent } from "#ui/types";
 import useApi from "~/composables/api";
 import useAuth from "~/composables/auth";
-import type { FormSubmitEvent } from "#ui/types";
 
 import { QuizCreateSchema } from "~/schema/quiz.schema";
 
@@ -13,6 +12,20 @@ definePageMeta({
   },
 });
 
+type Quiz = {
+  id: string;
+  title: string;
+  description: string | null;
+  image: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  users: {
+    id: string;
+    name: string;
+    image: string | null;
+  }[];
+};
+
 const { endpoints } = useApi();
 const createEndpoint = `${endpoints.quiz}/create`;
 
@@ -22,7 +35,7 @@ const router = useRouter();
 const error = ref<any>(null);
 async function create(input: QuizCreateSchema) {
   try {
-    await $fetch(createEndpoint, {
+    const data = await $fetch<Quiz>(createEndpoint, {
       method: "POST",
       credentials: "include",
       headers: useRequestHeaders(),
@@ -32,7 +45,7 @@ async function create(input: QuizCreateSchema) {
         image: input.image,
       },
     });
-    router.push("/quiz");
+    router.push(`/quiz/${data.id}/edit`);
   } catch (e: any) {
     error.value = e.toString();
   }
@@ -72,11 +85,7 @@ async function onSubmit(event: FormSubmitEvent<QuizCreateSchema>) {
       </UFormGroup>
 
       <UFormGroup label="Description" name="description">
-        <UInput
-          v-model="state.description"
-          type="textarea"
-          icon="tabler:file-description"
-        />
+        <UTextarea v-model="state.description" type="textarea" autoresize />
       </UFormGroup>
 
       <UFormGroup label="Image" name="image">
@@ -84,7 +93,7 @@ async function onSubmit(event: FormSubmitEvent<QuizCreateSchema>) {
       </UFormGroup>
 
       <div>
-        <UButton type="submit">Create</UButton>
+        <UButton type="submit" size="md">Create</UButton>
       </div>
     </UForm>
   </UContainer>
