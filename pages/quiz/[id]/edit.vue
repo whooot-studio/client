@@ -79,6 +79,7 @@ const { data: init } = await useFetch<ApiData>(getEndpoint, {
     id: route.params.id,
     include: ["users", "questions"],
   },
+  key: "quiz-data",
 });
 state.title = init.value?.title;
 state.description = init.value?.description;

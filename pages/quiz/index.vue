@@ -28,6 +28,7 @@ const list = `${endpoints.quiz}/list`;
 const { data, error, status } = await useFetch<Quiz[]>(list, {
   credentials: "include",
   headers: useRequestHeaders(),
+  key: "quiz-list",
 });
 </script>
 
