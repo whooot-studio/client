@@ -193,16 +193,6 @@ function removeQuestion(index: number) {
       <UButton type="button" size="md" icon="tabler:plus" @click="addQuestion">
         Add a question
       </UButton>
-
-      <UButton
-        type="button"
-        size="md"
-        icon="tabler:checks"
-        color="teal"
-        @click=""
-      >
-        Save quiz
-      </UButton>
     </div>
   </UContainer>
 </template>
