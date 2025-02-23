@@ -22,6 +22,7 @@ type Quiz = {
   }[];
 };
 
+const toast = useToast();
 const { endpoints } = useApi();
 const list = `${endpoints.quiz}/list`;
 
@@ -30,6 +31,38 @@ const { data, error, status } = await useFetch<Quiz[]>(list, {
   headers: useRequestHeaders(),
   key: "quiz-list",
 });
+
+async function deleteQuiz(quizId: string) {
+  try {
+    await $fetch(`${endpoints.quiz}/delete`, {
+      method: "POST",
+      credentials: "include",
+      headers: useRequestHeaders(),
+      body: {
+        id: quizId,
+      },
+    });
+
+    toast.add({
+      title: "Quiz deleted",
+      description: "Your quiz has been deleted successfully",
+      icon: "tabler:check",
+      timeout: 5000,
+      color: "green",
+    });
+
+    data.value = data.value?.filter((quiz) => quiz.id !== quizId) || [];
+  } catch (e: any) {
+    toast.add({
+      title: "Error",
+      description: e.message || e.toString(),
+      icon: "tabler:alert-circle",
+      timeout: 5000,
+      color: "red",
+    });
+    error.value = e.toString();
+  }
+}
 </script>
 
 <template>
@@ -72,6 +105,14 @@ const { data, error, status } = await useFetch<Quiz[]>(list, {
             :to="`/quiz/${quiz.id}/edit`"
             icon="tabler:edit"
             >Edit</UButton
+          >
+          <UButton
+            size="lg"
+            variant="outline"
+            color="red"
+            @click="deleteQuiz(quiz.id)"
+            icon="tabler:trash"
+            >Delete</UButton
           >
         </div>
 

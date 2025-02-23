@@ -123,6 +123,38 @@ async function updateQuiz(input: QuizSchema) {
   }
 }
 
+async function deleteQuiz() {
+  try {
+    await $fetch(`${endpoints.quiz}/delete`, {
+      method: "POST",
+      credentials: "include",
+      headers: useRequestHeaders(),
+      body: {
+        id: route.params.id,
+      },
+    });
+
+    toast.add({
+      title: "Quiz deleted",
+      description: "Your quiz has been deleted successfully",
+      icon: "tabler:check",
+      timeout: 5000,
+      color: "green",
+    });
+
+    router.push("/quiz");
+  } catch (e: any) {
+    toast.add({
+      title: "Error",
+      description: e.message || e.toString(),
+      icon: "tabler:alert-circle",
+      timeout: 5000,
+      color: "red",
+    });
+    error.value = e.toString();
+  }
+}
+
 async function submitQuiz(event: FormSubmitEvent<QuizSchema>) {
   await updateQuiz(event.data);
 }
@@ -170,10 +202,20 @@ function removeQuestion(index: number) {
         <UInput v-model="state.image" icon="tabler:photo" />
       </UFormGroup>
 
-      <div>
-        <UButton type="submit" size="md" :loading="loading" loading-icon=""
-          >Update</UButton
+      <div class="flex gap-2">
+        <UButton type="submit" size="md" :loading="loading" loading-icon="">
+          Update
+        </UButton>
+
+        <UButton
+          type="button"
+          size="md"
+          icon="tabler:trash"
+          color="red"
+          @click="deleteQuiz"
         >
+          Delete
+        </UButton>
       </div>
     </UForm>
 
