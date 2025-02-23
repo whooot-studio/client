@@ -107,7 +107,7 @@ async function deleteUser() {
             </UForm>
 
             <p class="text-sm text-gray-500">
-              <ClientOnly>
+              <ClientOnly fallback="...">
                 Joined:
                 {{ new Date(user?.createdAt!).toLocaleDateString() }}
               </ClientOnly>

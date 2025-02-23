@@ -47,7 +47,7 @@ function clipboardCopyWrapper() {
   } else
     toast.add({
       title: "Copy not supported",
-      description: "Your browser does not support the Clipboard API. Please try to copy the link instead",
+      description: "Your browser does not support the Clipboard API",
       color: "red",
       timeout: 8000,
     });
@@ -63,7 +63,8 @@ function shareWrapper() {
   else
     toast.add({
       title: "Share not supported",
-      description: "Your browser does not support the Web Share API",
+      description:
+        "Your browser does not support sharing. Please try to copy the link instead",
       color: "red",
       timeout: 8000,
     });
