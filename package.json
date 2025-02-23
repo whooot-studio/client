@@ -1,6 +1,6 @@
 {
   "name": "@whooot/client",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Whooot! - Free, Open-Source, Party Quiz",
   "type": "module",
   "scripts": {
