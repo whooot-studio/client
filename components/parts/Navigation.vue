@@ -11,11 +11,16 @@ const links = computed(() => {
         icon: "tabler:home",
         to: "/",
       },
-      {
+      loggedIn.value && {
         label: "Quiz",
         icon: "tabler:list",
         to: "/quiz",
         disabled: !loggedIn.value,
+      },
+      {
+        label: "Join",
+        icon: "tabler:target",
+        to: "/room",
       },
     ],
     [
