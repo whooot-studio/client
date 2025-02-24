@@ -10,6 +10,7 @@ type User = {
 };
 
 const route = useRoute();
+const router = useRouter();
 const toast = useToast();
 
 const game = reactive<{
@@ -61,6 +62,19 @@ const { send } = useWebSocket(endpoints.rooms, {
             timeout: 8000,
             color: "red",
           });
+        }
+        break;
+
+      case "meta:close":
+        {
+          toast.add({
+            title: "Room closed",
+            description: "The room has been closed",
+            icon: "tabler:info-square",
+            timeout: 8000,
+            color: "amber",
+          });
+          router.push("/room");
         }
         break;
     }
