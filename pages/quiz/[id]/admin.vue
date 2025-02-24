@@ -13,7 +13,7 @@ definePageMeta({
 
 type User = {
   id: string;
-  name: string;
+  username: string;
   image?: string;
 };
 
@@ -104,8 +104,8 @@ const { send } = useWebSocket(endpoints.rooms, {
         break;
 
       case "members:all":
-        for (const [id, member] of Object.entries(payload.members)) {
-          members.value.set(id, member as User);
+        for (const member of payload.members) {
+          members.value.set(member.id, member as User);
         }
         break;
     }
@@ -197,16 +197,13 @@ const start = () => {
         <UButton @click="start" :disabled="members.size <= 0" size="lg" block
           >Start</UButton
         >
-        <UAvatarGroup
-          v-if="members.size > 0"
-          :ui="{ wrapper: 'flex-row justify-start flex-wrap' }"
-        >
+        <UAvatarGroup v-if="members.size > 0" :ui="{ wrapper: 'flex-wrap' }">
           <UAvatar
             v-for="[id, member] in members"
             :key="id"
             size="xl"
             :src="member.image"
-            :alt="member.name"
+            :alt="member.username"
           />
         </UAvatarGroup>
         <template v-else>

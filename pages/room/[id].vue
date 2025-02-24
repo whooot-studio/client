@@ -5,7 +5,7 @@ import { UsernameSchema } from "~/schema/game.schema";
 
 type User = {
   id: string;
-  name: string;
+  username: string;
   image?: string;
 };
 
@@ -20,8 +20,9 @@ const game = reactive<{
   members: new Map(),
 });
 
-const usernameState = reactive({
+const userState = reactive({
   username: "Anonymous",
+  image: undefined as string | undefined,
 });
 
 const { endpoints } = useApi();
@@ -45,13 +46,9 @@ const { send } = useWebSocket(endpoints.rooms, {
         break;
 
       case "members:all":
-        for (const [id, member] of Object.entries(payload.members)) {
-          game.members.set(id, member as User);
+        for (const member of payload.members) {
+          game.members.set(member.id, member as User);
         }
-        break;
-
-      case "game:start":
-        game.state = "started";
         break;
 
       case "meta:error":
@@ -66,16 +63,6 @@ const { send } = useWebSocket(endpoints.rooms, {
           });
         }
         break;
-
-      // case "game:question:start":
-      //   game.question = payload.question;
-      //   game.options = payload.options;
-      //   break;
-
-      // case "game:question:end":
-      //   game.question = undefined;
-      //   game.options = undefined;
-      //   break;
     }
   },
 });
@@ -85,7 +72,8 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
     JSON.stringify({
       action: "meta:join",
       code: route.params.id,
-      name: event.data.username,
+      username: event.data.username,
+      image: userState.image,
     })
   );
 }
@@ -95,7 +83,7 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
   <UContainer :ui="{ constrained: 'max-w-3xl' }">
     <section v-if="game.state === 'idle'" class="space-y-4">
       <UForm
-        :state="usernameState"
+        :state="userState"
         :schema="UsernameSchema"
         @submit="defineUsername"
         class="max-w-md mx-auto space-y-2"
@@ -104,16 +92,16 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
           <UInput
             type="string"
             icon="tabler:user"
-            v-model="usernameState.username"
+            v-model="userState.username"
           />
         </UFormGroup>
 
         <UButton type="submit" block>
           Join
-          <template v-if="usernameState.username">
+          <template v-if="userState.username">
             as
             <span class="underline underline-offset-4">{{
-              usernameState.username
+              userState.username
             }}</span>
           </template>
         </UButton>
@@ -121,16 +109,13 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
 
       <UDivider />
 
-      <UAvatarGroup
-        v-if="game.members.size > 0"
-        :ui="{ wrapper: 'flex-row justify-start flex-wrap' }"
-      >
+      <UAvatarGroup v-if="game.members.size > 0" :ui="{ wrapper: 'flex-wrap' }">
         <UAvatar
-          v-for="[id, member] in game.members"
-          :key="id"
+          v-for="member in game.members.values()"
+          :key="member.id"
           size="xl"
           :src="member.image"
-          :alt="member.name"
+          :alt="member.username"
         />
       </UAvatarGroup>
       <template v-else>
