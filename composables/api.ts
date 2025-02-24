@@ -19,7 +19,7 @@ export default function useApi() {
     auth: createHttpEndpoint("/auth"),
     quiz: createHttpEndpoint("/quiz"),
     question: createHttpEndpoint("/quiz/question"),
-    rooms: createWsEndpoint("/rooms"),
+    rooms: createWsEndpoint("/room"),
   };
 
   return {
