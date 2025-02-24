@@ -80,7 +80,7 @@ async function deleteQuiz(quizId: string) {
         <div>
           <p class="font-semibold">{{ quiz.title }}</p>
           <p class="text-sm text-gray-600">
-            <ClientOnly>{{
+            <ClientOnly fallback="...">{{
               new Date(quiz.createdAt!).toLocaleDateString()
             }}</ClientOnly>
           </p>
