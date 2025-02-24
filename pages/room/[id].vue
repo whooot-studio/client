@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
-import PlayerAvatar from "~/components/quiz/PlayerAvatar.vue";
 import useApi from "~/composables/api";
 import { UsernameSchema } from "~/schema/game.schema";
 
 type User = {
   id: string;
   name: string;
+  image?: string;
 };
 
 const route = useRoute();
@@ -125,10 +125,12 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
         v-if="game.members.size > 0"
         :ui="{ wrapper: 'flex-row justify-start flex-wrap' }"
       >
-        <PlayerAvatar
+        <UAvatar
           v-for="[id, member] in game.members"
           :key="id"
-          :player="member"
+          size="xl"
+          :src="member.image"
+          :alt="member.name"
         />
       </UAvatarGroup>
       <template v-else>
@@ -137,9 +139,9 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
         </p>
 
         <UAvatarGroup class="animate-pulse">
-          <PlayerAvatar />
-          <PlayerAvatar />
-          <PlayerAvatar />
+          <UAvatar size="xl" alt="user" icon="tabler:user" />
+          <UAvatar size="xl" alt="user" icon="tabler:user" />
+          <UAvatar size="xl" alt="user" icon="tabler:user" />
         </UAvatarGroup>
       </template>
     </section>

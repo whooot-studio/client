@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useClipboard, useShare, type UseShareOptions } from "@vueuse/core";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
-import PlayerAvatar from "~/components/quiz/PlayerAvatar.vue";
 import useApi from "~/composables/api";
 import useClient from "~/composables/client";
 
@@ -15,6 +14,7 @@ definePageMeta({
 type User = {
   id: string;
   name: string;
+  image?: string;
 };
 
 const toast = useToast();
@@ -201,10 +201,12 @@ const start = () => {
           v-if="members.size > 0"
           :ui="{ wrapper: 'flex-row justify-start flex-wrap' }"
         >
-          <PlayerAvatar
+          <UAvatar
             v-for="[id, member] in members"
             :key="id"
-            :player="member"
+            size="xl"
+            :src="member.image"
+            :alt="member.name"
           />
         </UAvatarGroup>
         <template v-else>
@@ -213,9 +215,9 @@ const start = () => {
           </p>
 
           <UAvatarGroup class="animate-pulse">
-            <PlayerAvatar />
-            <PlayerAvatar />
-            <PlayerAvatar />
+            <UAvatar size="xl" alt="user" icon="tabler:user" />
+            <UAvatar size="xl" alt="user" icon="tabler:user" />
+            <UAvatar size="xl" alt="user" icon="tabler:user" />
           </UAvatarGroup>
         </template>
       </section>
