@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 import useApi from "~/composables/api";
+import useParticles from "~/composables/particles";
 import { UsernameSchema } from "~/schema/game.schema";
 
 type User = {
@@ -12,6 +13,7 @@ type User = {
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
+const particles = useParticles();
 
 const game = reactive<{
   state: "idle" | "started" | "ended";
@@ -20,6 +22,7 @@ const game = reactive<{
   state: "idle",
   members: new Map(),
 });
+const joined = computed(() => game.members.size > 0);
 
 const userState = reactive({
   username: "Anonymous",
@@ -77,6 +80,13 @@ const { send } = useWebSocket(endpoints.rooms, {
           router.push("/room");
         }
         break;
+
+      case "interact:emote":
+        {
+          const { emote } = payload;
+          particles.summon(emote, 1000);
+        }
+        break;
     }
   },
 });
@@ -90,6 +100,20 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
       image: userState.image,
     })
   );
+}
+
+function emote() {
+  if (!joined.value) return;
+
+  send(
+    JSON.stringify({
+      action: "interact:emote",
+      code: route.params.id,
+      emote: "🥳",
+    })
+  );
+
+  particles.summon("🥳", 1000);
 }
 </script>
 
@@ -123,7 +147,7 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
 
       <UDivider />
 
-      <UAvatarGroup v-if="game.members.size > 0" :ui="{ wrapper: 'flex-wrap' }">
+      <UAvatarGroup v-if="joined" :ui="{ wrapper: 'flex-wrap' }">
         <UAvatar
           v-for="member in game.members.values()"
           :key="member.id"
@@ -145,4 +169,20 @@ function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
       </template>
     </section>
   </UContainer>
+
+  <template v-if="joined">
+    <div
+      class="absolute bottom-0 right-0 flex align-middle justify-center p-2 size-16 select-none touch-manipulation"
+    >
+      <UButton
+        :ui="{ inline: 'inline text-center' }"
+        class="rounded-full aspect-square size-full text-xl"
+        @click="emote"
+      >
+        🥳
+      </UButton>
+    </div>
+
+    <InteractEmote :particles="particles.entities" />
+  </template>
 </template>

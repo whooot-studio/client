@@ -3,6 +3,7 @@ import { useClipboard, useShare, type UseShareOptions } from "@vueuse/core";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
 import useApi from "~/composables/api";
 import useClient from "~/composables/client";
+import useParticles from "~/composables/particles";
 
 definePageMeta({
   auth: {
@@ -70,6 +71,8 @@ function shareWrapper() {
     });
 }
 
+const particles = useParticles();
+
 const { endpoints } = useApi();
 const { send } = useWebSocket(endpoints.rooms, {
   onConnected: async (_socket) => {
@@ -106,6 +109,13 @@ const { send } = useWebSocket(endpoints.rooms, {
       case "members:all":
         for (const member of payload.members) {
           members.value.set(member.id, member as User);
+        }
+        break;
+
+      case "interact:emote":
+        {
+          const { emote } = payload;
+          particles.summon(emote, 1000);
         }
         break;
     }
@@ -220,4 +230,6 @@ const start = () => {
       </section>
     </template>
   </UContainer>
+
+  <InteractEmote :particles="particles.entities" />
 </template>
