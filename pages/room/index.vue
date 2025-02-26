@@ -19,8 +19,11 @@ const join = () => {
         size="lg"
         v-model="code"
         placeholder="Enter room code"
+        class="flex-1"
       />
-      <UButton @click="join" size="lg">Join</UButton>
+      <UButton @click="join" size="lg" icon="tabler:device-gamepad-2">
+        Join
+      </UButton>
     </div>
   </UContainer>
 </template>
