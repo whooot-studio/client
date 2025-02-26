@@ -91,7 +91,7 @@ const { send } = useWebSocket(endpoints.rooms, {
   },
 });
 
-function defineUsername(event: FormSubmitEvent<UsernameSchema>) {
+function join(event: FormSubmitEvent<UsernameSchema>) {
   return send(
     JSON.stringify({
       action: "meta:join",
@@ -108,7 +108,6 @@ function emote() {
   send(
     JSON.stringify({
       action: "interact:emote",
-      code: route.params.id,
       emote: "🥳",
     })
   );
@@ -123,7 +122,7 @@ function emote() {
       <UForm
         :state="userState"
         :schema="UsernameSchema"
-        @submit="defineUsername"
+        @submit="join"
         class="max-w-md mx-auto space-y-2"
       >
         <UFormGroup name="username" label="Username" required>
