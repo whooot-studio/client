@@ -87,6 +87,12 @@ const { send } = useWebSocket(endpoints.rooms, {
           particles.summon(emote, 1000);
         }
         break;
+
+      case "game:start":
+        {
+          game.state = "started";
+        }
+        break;
     }
   },
 });
