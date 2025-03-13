@@ -196,10 +196,18 @@ function emote() {
     </section>
     <section v-else-if="game.state === 'started'">
       <div v-if="game.question">
-        <div class="text-gray-700 p-4 border-2 border-violet-500 rounded-lg">
-          <p v-for="choice in game.question.choices" :key="choice">
+        <h2 class="text-lg font-bold mb-4">{{ game.question.title }}</h2>
+
+        <div class="grid grid-cols-2 gap-4 auto-rows-auto">
+          <UButton
+            v-for="choice in game.question.choices"
+            :key="choice"
+            color="primary"
+            size="xl"
+            class="justify-center h-20"
+          >
             {{ choice }}
-          </p>
+          </UButton>
         </div>
       </div>
     </section>
