@@ -17,12 +17,30 @@ type User = {
   username: string;
   image?: string;
 };
+type Question = {
+  id: string;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+  quizId: string;
+  title: string;
+  choices: string[];
+  answer: string;
+  points: number;
+};
 
 const toast = useToast();
 
 const code = ref<string>("");
 const roomUrl = computed(() => `${client.origin}/room/${code.value}`);
+
+const state = ref<"idle" | "started" | "ended">("idle");
 const members = ref<Map<string, User>>(new Map());
+const questions = ref<Question[]>([]);
+const currentQuestion = ref<Question | null>(null);
+const currentQuestionHasPrevious = ref<boolean>(false);
+const currentQuestionHasNext = ref<boolean>(false);
+
 const client = useClient();
 const route = useRoute();
 
@@ -86,9 +104,10 @@ const { send } = useWebSocket(endpoints.rooms, {
 
   onMessage: async (_socket, event) => {
     const blob = event.data;
-    if (!blob || !(blob instanceof Blob)) return;
 
-    const payload = JSON.parse(await blob.text());
+    let payload;
+    if (!blob || !(blob instanceof Blob)) payload = JSON.parse(event.data);
+    else payload = JSON.parse(await blob.text());
     if (!payload.action) return;
 
     console.log(payload.action, JSON.stringify(payload));
@@ -96,6 +115,19 @@ const { send } = useWebSocket(endpoints.rooms, {
     switch (payload.action) {
       case "meta:code":
         code.value = payload.code;
+        break;
+
+      case "meta:error":
+        {
+          const { code, message } = payload;
+          toast.add({
+            title: code || "Error",
+            description: message || "An error occured",
+            icon: "tabler:alert-circle",
+            timeout: 8000,
+            color: "red",
+          });
+        }
         break;
 
       case "members:join":
@@ -114,8 +146,40 @@ const { send } = useWebSocket(endpoints.rooms, {
 
       case "interact:emote":
         {
-          const { emote } = payload;
+          const { emote } = payload as { emote: string };
           particles.summon(emote, 1000);
+        }
+        break;
+
+      case "game:start":
+        {
+          state.value = "started";
+        }
+        break;
+
+      case "game:end":
+        {
+          state.value = "ended";
+        }
+        break;
+
+      case "game:quiz":
+        {
+          const { questions: q } = payload as { questions: Question[] };
+          questions.value = q;
+        }
+        break;
+
+      case "game:question":
+        {
+          const { question, hasNext, hasPrevious } = payload as {
+            question: Question;
+            hasNext: boolean;
+            hasPrevious: boolean;
+          };
+          currentQuestion.value = question;
+          currentQuestionHasNext.value = hasNext;
+          currentQuestionHasPrevious.value = hasPrevious;
         }
         break;
     }
@@ -130,18 +194,34 @@ const { send } = useWebSocket(endpoints.rooms, {
   },
 });
 
-const start = () => {
+function start() {
   const payload = {
     action: "game:start",
     code: code.value,
   };
   send(JSON.stringify(payload));
-};
+}
+
+function next() {
+  const payload = {
+    action: "game:next",
+    code: code.value,
+  };
+  send(JSON.stringify(payload));
+}
+
+function previous() {
+  const payload = {
+    action: "game:previous",
+    code: code.value,
+  };
+  send(JSON.stringify(payload));
+}
 </script>
 
 <template>
   <UContainer :ui="{ constrained: 'flex flex-col md:flex-row gap-2' }">
-    <template v-if="code">
+    <template v-if="code && state === 'idle'">
       <section class="w-full md:w-2/3 mb-8 md:mb-0">
         <div class="mx-auto md:w-fit">
           <img
@@ -229,6 +309,53 @@ const start = () => {
         </template>
       </section>
     </template>
+    <div v-else-if="state === 'started'" class="w-full">
+      <section class="w-full md:w-2/3 mb-8 md:mb-0 md:mx-auto">
+        <div class="flex justify-between mb-4">
+          <UButton
+            icon="tabler:arrow-left"
+            variant="outline"
+            @click="previous"
+            :disabled="!currentQuestionHasPrevious"
+          >
+            Previous
+          </UButton>
+          <UButton
+            v-if="currentQuestionHasNext"
+            icon="tabler:arrow-right"
+            iconRight
+            variant="outline"
+            @click="next"
+          >
+            Next
+          </UButton>
+          <UButton
+            v-else
+            icon="tabler:check"
+            iconRight
+            variant="outline"
+            @click="next"
+          >
+            Finish
+          </UButton>
+        </div>
+
+        <div class="p-6">
+          <p class="text-xl font-bold">
+            {{ currentQuestion?.title }}
+          </p>
+
+          <div class="text-gray-700 p-4 border-2 border-violet-500 rounded-lg">
+            <p v-for="choice in currentQuestion?.choices" :key="choice">
+              {{ choice }}
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div v-else-if="state === 'ended'">
+      <p>ended</p>
+    </div>
   </UContainer>
 
   <InteractEmote :particles="particles.entities" />

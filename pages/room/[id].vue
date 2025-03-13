@@ -10,6 +10,11 @@ type User = {
   image?: string;
 };
 
+type Question = {
+  title: string;
+  choices: string[];
+};
+
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
@@ -18,9 +23,11 @@ const particles = useParticles();
 const game = reactive<{
   state: "idle" | "started" | "ended";
   members: Map<string, User>;
+  question: Question | null;
 }>({
   state: "idle",
   members: new Map(),
+  question: null,
 });
 const joined = computed(() => game.members.size > 0);
 
@@ -32,10 +39,11 @@ const userState = reactive({
 const { endpoints } = useApi();
 const { send } = useWebSocket(endpoints.rooms, {
   onMessage: async (socket, event) => {
-    const blob: Blob = event.data;
-    if (!blob) return;
+    const blob = event.data;
 
-    const payload = JSON.parse(await blob.text());
+    let payload;
+    if (!blob || !(blob instanceof Blob)) payload = JSON.parse(event.data);
+    else payload = JSON.parse(await blob.text());
     if (!payload.action) return;
 
     console.log(payload.action, JSON.stringify(payload));
@@ -91,6 +99,19 @@ const { send } = useWebSocket(endpoints.rooms, {
       case "game:start":
         {
           game.state = "started";
+        }
+        break;
+
+      case "game:end":
+        {
+          game.state = "ended";
+        }
+        break;
+
+      case "game:question":
+        {
+          const { question } = payload as { question: Question };
+          game.question = question;
         }
         break;
     }
@@ -173,6 +194,18 @@ function emote() {
         </UAvatarGroup>
       </template>
     </section>
+    <section v-else-if="game.state === 'started'">
+      <div v-if="game.question">
+        <div class="text-gray-700 p-4 border-2 border-violet-500 rounded-lg">
+          <p v-for="choice in game.question.choices" :key="choice">
+            {{ choice }}
+          </p>
+        </div>
+      </div>
+    </section>
+    <section v-else-if="game.state === 'ended'">
+      <p>ended</p>
+    </section>
   </UContainer>
 
   <template v-if="joined">
@@ -187,7 +220,6 @@ function emote() {
         🥳
       </UButton>
     </div>
-
     <InteractEmote :particles="particles.entities" />
   </template>
 </template>
