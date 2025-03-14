@@ -114,6 +114,18 @@ const { send } = useWebSocket(endpoints.rooms, {
           game.question = question;
         }
         break;
+
+      case "game:answer:confirm":
+        {
+          toast.add({
+            title: "Answer confirmed",
+            description: "Your answer has been received",
+            icon: "tabler:check",
+            timeout: 5000,
+            color: "blue",
+          });
+        }
+        break;
     }
   },
 });
@@ -140,6 +152,15 @@ function emote() {
   );
 
   particles.summon("🥳", 1000);
+}
+
+function answer(choice: string) {
+  send(
+    JSON.stringify({
+      action: "game:answer",
+      answer: choice,
+    })
+  );
 }
 </script>
 
@@ -205,6 +226,7 @@ function emote() {
             color="primary"
             size="xl"
             class="justify-center h-20"
+            @click="answer(choice)"
           >
             {{ choice }}
           </UButton>
